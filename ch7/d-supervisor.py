@@ -107,6 +107,7 @@ builder.add_edge(START, "supervisor")
 builder.add_conditional_edges(
     "supervisor",
     lambda state: state["next"],
+    {"researcher": "researcher", "coder": "coder", "FINISH": "__end__"},
 )
 
 builder.add_edge("researcher", "supervisor")
@@ -114,6 +115,11 @@ builder.add_edge("coder", "supervisor")
 
 graph = builder.compile()
 
+# 儲存 agent 架構圖
+# png_data = graph.get_graph().draw_mermaid_png()
+# with open("d-supervisor.png", "wb") as f:
+#     f.write(png_data)
+# print("架構圖已儲存至 d-supervisor.png")
 
 # =========================
 # 8. Example run
