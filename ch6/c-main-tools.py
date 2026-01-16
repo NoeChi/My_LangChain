@@ -86,5 +86,5 @@ input = {
 }
 
 for c in graph.stream(input):
-    print(c)
+    print('🤖 Graph output:', c)
     print('-------')

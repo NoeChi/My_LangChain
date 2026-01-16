@@ -14,6 +14,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 # 1. Decision schema
 # =========================
 class SupervisorDecision(BaseModel):
+    # basemodel 用於定義結構化輸出
     next: Literal["researcher", "coder", "FINISH"]
 
 
@@ -31,6 +32,7 @@ supervisor_llm = llm.with_structured_output(SupervisorDecision)
 # 3. State
 # =========================
 class AgentState(MessagesState):
+    # MessagesState 已經有繼承 messages 欄位了
     next: Literal["researcher", "coder", "FINISH"]
 
 

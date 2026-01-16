@@ -18,7 +18,7 @@ class SubgraphState(TypedDict):
 
 # Define subgraph
 def subgraph_node(state: SubgraphState):
-    print('state:', state)
+    print('State before subgraph node:', state)
     return {"bar": state["bar"] + "baz"}
 
 
@@ -32,9 +32,11 @@ subgraph = subgraph_builder.compile()
 # Define parent graph node that invokes subgraph
 def node(state: State):
     # transform the state to the subgraph state
-    response = subgraph.invoke({"bar": state["foo"]})
+    print("Initial state:", state)
+    response = subgraph.invoke({"bar": state["foo"]}) # pass foo->bar，轉換key名稱，留下value
+    print("state after subgraph node:", response)
     # transform response back to the parent state
-    return {"foo": response["bar"]}
+    return {"foo": response["bar"]} # pass bar->foo，轉換key名稱，留下value
 
 
 builder = StateGraph(State)
