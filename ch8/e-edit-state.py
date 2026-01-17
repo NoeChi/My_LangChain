@@ -114,7 +114,7 @@ async def main():
             print("\n已授權，繼續執行...\n")
             # 繼續執行下一步
             async for chunk in graph.astream(None, config):
-                print(f"[輸出] {chunk}")
+                print(f"[輸出] {chunk}") # 回到 while 迴圈開頭
 
         elif user_input == "e":
             # 讓用戶輸入新的 prompt
