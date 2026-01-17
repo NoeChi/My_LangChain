@@ -81,6 +81,7 @@ async def main():
     print(f"初始問題: {input_data['messages'][0].content}")
 
     # 第一次執行，啟動 graph
+    # 輸出中斷點
     async for chunk in graph.astream(input_data, config):
         print(f"[輸出] {chunk}")
 
@@ -122,17 +123,27 @@ async def main():
             if new_prompt:
                 # 使用 update_state 更新狀態，加入新的 HumanMessage
                 # as_node 參數指定這個更新要被視為從哪個節點發出
+                #
+                # 重要：使用 RemoveMessage 清除之前的訊息，避免殘留未完成的 tool_calls
+                # 這樣可以避免 OpenAI API 錯誤：
+                # "An assistant message with 'tool_calls' must be followed by tool messages"
+                from langchain_core.messages import RemoveMessage
+
+                # 取得當前所有訊息，並建立移除指令
+                current_messages = state.values.get("messages", [])
+                remove_messages = [RemoveMessage(id=msg.id) for msg in current_messages]
+
+                # 先清除所有訊息，再加入新的 HumanMessage
                 graph.update_state(
                     config,
-                    {"messages": [HumanMessage(content=new_prompt)]},
+                    {"messages": remove_messages + [HumanMessage(content=new_prompt)]},
                     as_node="__start__"  # 視為從起點發出，重新開始流程
                 )
                 print(f"\n已更新指令為: {new_prompt}")
-                print("重新執行...\n")
-
-                # 繼續執行更新後的 graph
-                async for chunk in graph.astream(None, config):
-                    print(f"[輸出] {chunk}")
+                print("回到中斷點檢查...\n")
+                # 不在這裡呼叫 astream，讓 while 迴圈回到開頭
+                # 這樣會重新檢查 state.next，並正確顯示中斷詢問
+                continue
             else:
                 print("未輸入新指令，維持原狀態")
 
