@@ -16,7 +16,6 @@ template = ChatPromptTemplate.from_messages(
 
 model = ChatOpenAI(model="gpt-3.5-turbo")
 
-# https://gemini.google.com/share/032c759c21ba
 # 命令式組合 + 非同步模式 --> 但還是會等最後才會完整回傳
 @chain
 async def chatbot(values):

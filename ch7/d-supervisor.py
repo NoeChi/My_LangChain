@@ -54,7 +54,8 @@ def supervisor(state: AgentState):
             ),
         ]
     )
-
+    # 會輸出next欄位，決定下一步要去哪個節點
+    # 會輸出 messages 欄位，傳遞給下一個節點使用
     return {
         "next": decision.next,
         "messages": state["messages"],
@@ -71,7 +72,7 @@ def researcher(state: AgentState):
             state["messages"][-1],
         ]
     )
-
+    # 只會輸出 messages 欄位，傳遞給下一個節點使用
     return {
         "messages": state["messages"] + [response],
     }
@@ -87,7 +88,7 @@ def coder(state: AgentState):
             state["messages"][-1],
         ]
     )
-
+    # 只會輸出 messages 欄位，傳遞給下一個節點使用
     return {
         "messages": state["messages"] + [response],
     }
