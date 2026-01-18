@@ -36,7 +36,7 @@ def model_node(state: State) -> State:
     print('-------')
     res = model.invoke(state["messages"])
     # print("🤖 Model response:", res)
-    return {"messages": res}
+    return {"messages": res} # 回傳的 state 裡面只有 messages 欄位
 
 
 builder = StateGraph(State)
@@ -66,5 +66,5 @@ input = {
 }
 
 for c in graph.stream(input):
-    print(c)
+    print(c) # print state updates
     print('-------')

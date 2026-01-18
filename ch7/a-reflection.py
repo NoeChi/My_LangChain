@@ -20,6 +20,7 @@ model = ChatOpenAI()
 
 
 # Define state type
+# BaseMessage https://v03.api.js.langchain.com/classes/_langchain_core.messages.BaseMessage.html
 class State(TypedDict):
     # BaseMessage : 這表示 messages 是一個可以包含任何訊息類型的 list。如果寫成 list[HumanMessage] 就只能放 HumanMessage，但用 list[BaseMessage] 就可以混合放 HumanMessage、AIMessage、SystemMessage 等等
     messages: Annotated[list[BaseMessage], add_messages]

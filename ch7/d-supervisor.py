@@ -33,6 +33,7 @@ supervisor_llm = llm.with_structured_output(SupervisorDecision)
 # =========================
 class AgentState(MessagesState):
     # MessagesState 已經有繼承 messages 欄位了
+    # MessagesState = messages: Annotated[list[BaseMessage], add_messages]
     next: Literal["researcher", "coder", "FINISH"]
 
 
@@ -40,6 +41,9 @@ class AgentState(MessagesState):
 # 4. Supervisor node
 # =========================
 def supervisor(state: AgentState):
+    print("\n========================")
+    # 使用 supervisor_llm 來決定下一步行動，結構化輸出
+    print("🧑‍💼 Supervisor evaluating state :", state)
     decision = supervisor_llm.invoke(
         [
             (
@@ -56,9 +60,9 @@ def supervisor(state: AgentState):
     )
     # 會輸出next欄位，決定下一步要去哪個節點
     # 會輸出 messages 欄位，傳遞給下一個節點使用
+
     return {
         "next": decision.next,
-        "messages": state["messages"],
     }
 
 
@@ -72,9 +76,9 @@ def researcher(state: AgentState):
             state["messages"][-1],
         ]
     )
-    # 只會輸出 messages 欄位，傳遞給下一個節點使用
+    # 只會輸出 messages 欄位，add_messages reducer 會自動合併
     return {
-        "messages": state["messages"] + [response],
+        "messages": [response],
     }
 
 
@@ -88,9 +92,9 @@ def coder(state: AgentState):
             state["messages"][-1],
         ]
     )
-    # 只會輸出 messages 欄位，傳遞給下一個節點使用
+    # 只會輸出 messages 欄位，add_messages reducer 會自動合併
     return {
-        "messages": state["messages"] + [response],
+        "messages": [response],
     }
 
 
@@ -128,7 +132,8 @@ graph = builder.compile()
 initial_state = {
     "messages": [
         HumanMessage(
-            content="I need help analyzing some data and creating a visualization."
+            # content="What is the history of AI technique."
+            content="what is 4!"
         )
     ],
     "next": "supervisor",
