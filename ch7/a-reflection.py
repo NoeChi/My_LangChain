@@ -50,6 +50,7 @@ def generate(state: State) -> State:
 
 
 def reflect(state: State) -> State:
+    print("🤖 state before reflect:", state["messages"])
     # Invert the messages to get the LLM to reflect on its own output
     cls_map = {AIMessage: HumanMessage, HumanMessage: AIMessage}
     # First message is the original user request. We hold it the same for all nodes

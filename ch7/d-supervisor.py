@@ -132,8 +132,8 @@ graph = builder.compile()
 initial_state = {
     "messages": [
         HumanMessage(
-            # content="What is the history of AI technique."
-            content="what is 4!"
+            content="What is the history of AI technique."
+            # content="what is 4!"
         )
     ],
     "next": "supervisor",
